@@ -15,7 +15,9 @@ steps:
   inputs:
     gradleWrapperFile: 'gradlew'
     tasks: 'sonar'
-    publishJUnitResults: false
+    publishJUnitResults: true
+    testResultsFiles: '**/TEST-*.xml'
+    testRunTitle: 'JUnit Test'
     codeCoverageToolOption: 'JaCoCo'
     codeCoverageClassFilesDirectories: 'build/classes/main/'
     javaHomeOption: 'JDKVersion'
@@ -23,4 +25,3 @@ steps:
     sqGradlePluginVersionChoice: 'specify'
     sonarQubeGradlePluginVersion: '3.3'
     spotBugsAnalysis: false
-  displayName: 'Gradle'
