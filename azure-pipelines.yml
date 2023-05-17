@@ -16,7 +16,7 @@ steps:
     gradleWrapperFile: 'gradlew'
     tasks: 'sonar'
     publishJUnitResults: false
-    javaHomeOption: 'JDKVersion'    
+    javaHomeOption: 'JDKVersion'
     sonarQubeRunAnalysis: true
     sqGradlePluginVersionChoice: 'specify'
     sonarQubeGradlePluginVersion: '3.5.0.2730'
