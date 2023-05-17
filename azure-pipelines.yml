@@ -27,8 +27,23 @@ steps:
     spotBugsAnalysis: false
   displayName: 'SonarCloud Analysis'
   
-- task: PublishBuildArtifacts@1
+- task: Docker@2
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
+    containerRegistry: 'DockerHub'
+    command: 'login'
+  displayName: 'Docker Login'
+- task: Docker@2
+  inputs:
+    containerRegistry: 'DockerHub'
+    repository: 'nsg2020/microservicio-spring'
+    command: 'build'
+    Dockerfile: '**/Dockerfile'
+  displayName: 'Docker Build'
+
+- task: Docker@2
+  inputs:
+    containerRegistry: 'DockerHub'
+    repository: 'nsg2020/microservicio-spring'
+    command: 'push'
+    tags: '1.0'
+  displayName: 'Docker Push'
