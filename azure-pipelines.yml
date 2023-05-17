@@ -11,14 +11,25 @@ pool:
 
 steps:
 
+- task: SonarCloudPrepare@1
+  inputs:
+    SonarCloud: 'SonarCloudEC'
+    organization: 'devops-trabajofinal-ec'
+    projectKey: 'DevOps-TrabajoFinal-EC_microservicio-spring'
+    projectName: 'microservicio-spring'
+    scannerMode: 'Other'
+  displayName: 'SonarCloud Prepare'
+  
 - task: Gradle@3
   inputs:
     gradleWrapperFile: 'gradlew'
-    tasks: 'build'
+    tasks: 'sonarqube'
     publishJUnitResults: true
     testResultsFiles: '**/TEST-*.xml'
     javaHomeOption: 'JDKVersion'
     jdkVersionOption: '1.8'
-    sonarQubeRunAnalysis: false
+    sonarQubeRunAnalysis: true
+    sqGradlePluginVersionChoice: 'specify'
+    sonarQubeGradlePluginVersion: '3.3'
     spotBugsAnalysis: false
-  displayName: 'Build'
+  displayName: 'Gradle'
