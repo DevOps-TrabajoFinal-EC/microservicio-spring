@@ -10,15 +10,15 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-- task: Gradle@2
+
+- task: Gradle@3
   inputs:
-    workingDirectory: ''
     gradleWrapperFile: 'gradlew'
-    gradleOptions: '-Xmx3072m'
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.8'
-    jdkArchitectureOption: 'x64'
+    tasks: 'build'
     publishJUnitResults: true
     testResultsFiles: '**/TEST-*.xml'
-    tasks: 'build'
-  displayName: 'Build gradle'
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.8'
+    sonarQubeRunAnalysis: false
+    spotBugsAnalysis: false
+  displayName: 'Build'
