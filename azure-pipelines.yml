@@ -1,31 +1,43 @@
 pool:
   vmImage: ubuntu-latest
+  displayName: Build
 
 steps:
+  steps:
+  - task: Gradle@3
+    inputs:
+      gradleWrapperFile: 'gradlew'
+      tasks: 'build'
+      publishJUnitResults: true
+      testResultsFiles: '**/TEST-*.xml'
+      javaHomeOption: 'JDKVersion'
+      sonarQubeRunAnalysis: false
+      spotBugsAnalysis: false
+    displayName: Build
 
-- task: SonarCloudPrepare@1
-  inputs:
-    SonarCloud: 'SonarCloudEC'
-    organization: 'devops-trabajofinal-ec'
-    projectKey: 'DevOps-TrabajoFinal-EC_microservicio-spring'
-    projectName: 'microservicio-spring'
-  displayName: 'SonarCloud Prepare'
+#- task: SonarCloudPrepare@1
+#  inputs:
+#    SonarCloud: 'SonarCloudEC'
+#    organization: 'devops-trabajofinal-ec'
+#    projectKey: 'DevOps-TrabajoFinal-EC_microservicio-spring'
+#    projectName: 'microservicio-spring'
+#  displayName: 'SonarCloud Prepare'
 
-- task: Gradle@3
-  inputs:
-    gradleWrapperFile: 'gradlew'
-    tasks: 'sonar'
-    publishJUnitResults: true
-    testResultsFiles: '**/TEST-*.xml'
-    codeCoverageToolOption: 'JaCoCo'
-    codeCoverageClassFilesDirectories: 'build/classes/main/'
-    codeCoverageGradle5xOrHigher: false
-    javaHomeOption: 'JDKVersion'
-    sonarQubeRunAnalysis: true
-    sqGradlePluginVersionChoice: 'specify'
-    sonarQubeGradlePluginVersion: '3.3'
-    spotBugsAnalysis: false
-  displayName: 'SonarCloud Analysis'
+#- task: Gradle@3
+#  inputs:
+#    gradleWrapperFile: 'gradlew'
+#    tasks: 'sonar'
+#    publishJUnitResults: true
+#    testResultsFiles: '**/TEST-*.xml'
+#    codeCoverageToolOption: 'JaCoCo'
+#    codeCoverageClassFilesDirectories: 'build/classes/main/'
+#    codeCoverageGradle5xOrHigher: false
+#    javaHomeOption: 'JDKVersion'
+#    sonarQubeRunAnalysis: true
+#    sqGradlePluginVersionChoice: 'specify'
+#    sonarQubeGradlePluginVersion: '3.3'
+#    spotBugsAnalysis: false
+#  displayName: 'SonarCloud Analysis'
   
 - task: Docker@2
   inputs:
