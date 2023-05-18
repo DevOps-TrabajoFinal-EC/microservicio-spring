@@ -39,7 +39,7 @@ jobs:
   #    sonarQubeGradlePluginVersion: '3.3'
   #    spotBugsAnalysis: false
   #  displayName: 'SonarCloud Analysis'
-  
+
   - task: Docker@2
     inputs:
       containerRegistry: 'DockerHub'
@@ -58,5 +58,4 @@ jobs:
       containerRegistry: 'DockerHub'
       repository: 'nsg2020/microservicio-spring'
       command: 'push'
-      tags: '1.0'
     displayName: 'Docker Push'
