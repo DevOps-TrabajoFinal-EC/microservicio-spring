@@ -15,7 +15,30 @@ jobs:
       sonarQubeRunAnalysis: false
       spotBugsAnalysis: false
     displayName: Build
+  - task: Gradle@2
+    inputs:
+      workingDirectory: '$(Build.SourcesDirectory)'
+      gradleWrapperFile: 'gradlew'
+      tasks: 'test'
+      publishJUnitResults: true
+      javaHomeOption: 'JDKVersion'
+      jdkVersionOption: '1.11'
+      testResultsFiles: '**/build/test-results/test/*.xml'
+    displayName: 'JUnit'
 
+  - task: Gradle@3
+    inputs:
+      gradleWrapperFile: 'gradlew'
+      tasks: 'build'
+      publishJUnitResults: true
+      testResultsFiles: '**/TEST-*.xml'
+      testRunTitle: 'Coverage'
+      codeCoverageToolOption: 'Cobertura'
+      codeCoverageClassFilesDirectories: 'build/classes/main/'
+      javaHomeOption: 'JDKVersion'
+      sonarQubeRunAnalysis: false
+      spotBugsAnalysis: false
+    displayName: 'Cobertura'
   #- task: SonarCloudPrepare@1
   #  inputs:
   #    SonarCloud: 'SonarCloudEC'
