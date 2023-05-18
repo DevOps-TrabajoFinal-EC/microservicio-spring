@@ -1,9 +1,10 @@
-pool:
-  vmImage: ubuntu-latest
+jobs:
+- job:
+  pool:
+    vmImage: ubuntu-latest
   displayName: Build
 
-steps:
-  steps:
+  steps: 
   - task: Gradle@3
     inputs:
       gradleWrapperFile: 'gradlew'
@@ -15,47 +16,47 @@ steps:
       spotBugsAnalysis: false
     displayName: Build
 
-#- task: SonarCloudPrepare@1
-#  inputs:
-#    SonarCloud: 'SonarCloudEC'
-#    organization: 'devops-trabajofinal-ec'
-#    projectKey: 'DevOps-TrabajoFinal-EC_microservicio-spring'
-#    projectName: 'microservicio-spring'
-#  displayName: 'SonarCloud Prepare'
+  #- task: SonarCloudPrepare@1
+  #  inputs:
+  #    SonarCloud: 'SonarCloudEC'
+  #    organization: 'devops-trabajofinal-ec'
+  #    projectKey: 'DevOps-TrabajoFinal-EC_microservicio-spring'
+  #    projectName: 'microservicio-spring'
+  #  displayName: 'SonarCloud Prepare'
 
-#- task: Gradle@3
-#  inputs:
-#    gradleWrapperFile: 'gradlew'
-#    tasks: 'sonar'
-#    publishJUnitResults: true
-#    testResultsFiles: '**/TEST-*.xml'
-#    codeCoverageToolOption: 'JaCoCo'
-#    codeCoverageClassFilesDirectories: 'build/classes/main/'
-#    codeCoverageGradle5xOrHigher: false
-#    javaHomeOption: 'JDKVersion'
-#    sonarQubeRunAnalysis: true
-#    sqGradlePluginVersionChoice: 'specify'
-#    sonarQubeGradlePluginVersion: '3.3'
-#    spotBugsAnalysis: false
-#  displayName: 'SonarCloud Analysis'
+  #- task: Gradle@3
+  #  inputs:
+  #    gradleWrapperFile: 'gradlew'
+  #    tasks: 'sonar'
+  #    publishJUnitResults: true
+  #    testResultsFiles: '**/TEST-*.xml'
+  #    codeCoverageToolOption: 'JaCoCo'
+  #    codeCoverageClassFilesDirectories: 'build/classes/main/'
+  #    codeCoverageGradle5xOrHigher: false
+  #    javaHomeOption: 'JDKVersion'
+  #    sonarQubeRunAnalysis: true
+  #    sqGradlePluginVersionChoice: 'specify'
+  #    sonarQubeGradlePluginVersion: '3.3'
+  #    spotBugsAnalysis: false
+  #  displayName: 'SonarCloud Analysis'
   
-- task: Docker@2
-  inputs:
-    containerRegistry: 'DockerHub'
-    command: 'login'
-  displayName: 'Docker Login'
-- task: Docker@2
-  inputs:
-    containerRegistry: 'DockerHub'
-    repository: 'nsg2020/microservicio-spring'
-    command: 'build'
-    Dockerfile: '**/Dockerfile'
-  displayName: 'Docker Build'
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'DockerHub'
+      command: 'login'
+    displayName: 'Docker Login'
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'DockerHub'
+      repository: 'nsg2020/microservicio-spring'
+      command: 'build'
+      Dockerfile: '**/Dockerfile'
+    displayName: 'Docker Build'
 
-- task: Docker@2
-  inputs:
-    containerRegistry: 'DockerHub'
-    repository: 'nsg2020/microservicio-spring'
-    command: 'push'
-    tags: '1.0'
-  displayName: 'Docker Push'
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'DockerHub'
+      repository: 'nsg2020/microservicio-spring'
+      command: 'push'
+      tags: '1.0'
+    displayName: 'Docker Push'
