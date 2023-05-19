@@ -4,6 +4,8 @@ jobs:
     vmImage: ubuntu-latest
   displayName: Build
 
+###Build Gradle
+
   steps: 
   - task: Gradle@3
     inputs:
@@ -16,6 +18,7 @@ jobs:
       spotBugsAnalysis: false
     displayName: Build
 
+###JaCoCo 
   
   - task: PublishCodeCoverageResults@1
     inputs:
@@ -50,6 +53,8 @@ jobs:
   #    spotBugsAnalysis: false
   #  displayName: 'SonarCloud Analysis'
 
+###Docker build
+
   - task: Docker@2
     inputs:
       containerRegistry: 'DockerHub'
@@ -76,7 +81,7 @@ jobs:
         $(Build.BuildId)
     displayName: 'Docker Push'
 
-#Deployment job
+###Deployment job
 - job: Deploy
   dependsOn: Build
   pool: 'localk8s'
@@ -91,7 +96,7 @@ jobs:
       arguments: '-f deployment-app.yaml'
     displayName: 'Deployment k8s local'
 
-#Port forward for k8s local    
+###Port forward for k8s local    
 - job: 'DeployForward'
   dependsOn: Deploy
   pool: 'localk8s'
@@ -104,6 +109,16 @@ jobs:
 #      sleep 60
 #      kubectl delete service microservicio-spring-deployment
 #      kubectl port-forward deploy/microservicio-spring-deployment 8080:8080 &
+
+
+###Performance test    
+- job: 'PerformanceTest'
+  dependsOn: DeployForward
+  pool: 'localk8s'
+  steps:
+   - script: |
+      jmeter -n -t $(System.DefaultWorkingDirectory)/microservicio-spring.jmx -l $(System.DefaultWorkingDirectory)/resultadosJmeter.jtl
+  displayName: 'Permormance test JMeter'  
 
 #  - task: TaurusRunner@0
 #    inputs:
