@@ -5,7 +5,6 @@ jobs:
   displayName: Build
 
 ###Build Gradle
-
   steps: 
   - task: Gradle@3
     inputs:
@@ -18,8 +17,7 @@ jobs:
       spotBugsAnalysis: false
     displayName: Build
 
-###JaCoCo 
-  
+###JaCoCo
   - task: PublishCodeCoverageResults@1
     inputs:
       codeCoverageTool: 'JaCoCo'
@@ -29,32 +27,31 @@ jobs:
       failIfCoverageEmpty: true
     displayName: 'JaCoCo test'
 
-  #- task: SonarCloudPrepare@1
-  #  inputs:
-  #    SonarCloud: 'SonarCloudEC'
-  #    organization: 'devops-trabajofinal-ec'
-  #    projectKey: 'DevOps-TrabajoFinal-EC_microservicio-spring'
-  #    projectName: 'microservicio-spring'
-  #  displayName: 'SonarCloud Prepare'
+  - task: SonarCloudPrepare@1
+    inputs:
+      SonarCloud: 'SonarCloudEC'
+      organization: 'devops-trabajofinal-ec'
+      projectKey: 'DevOps-TrabajoFinal-EC_microservicio-spring'
+      projectName: 'microservicio-spring'
+    displayName: 'SonarCloud Prepare'
 
-  #- task: Gradle@3
-  #  inputs:
-  #    gradleWrapperFile: 'gradlew'
-  #    tasks: 'sonar'
-  #    publishJUnitResults: true
-  #    testResultsFiles: '**/TEST-*.xml'
-  #    codeCoverageToolOption: 'JaCoCo'
-  #    codeCoverageClassFilesDirectories: 'build/classes/main/'
-  #    codeCoverageGradle5xOrHigher: false
-  #    javaHomeOption: 'JDKVersion'
-  #    sonarQubeRunAnalysis: true
-  #    sqGradlePluginVersionChoice: 'specify'
-  #    sonarQubeGradlePluginVersion: '3.3'
-  #    spotBugsAnalysis: false
-  #  displayName: 'SonarCloud Analysis'
+  - task: Gradle@3
+    inputs:
+      gradleWrapperFile: 'gradlew'
+      tasks: 'sonar'
+      publishJUnitResults: true
+      testResultsFiles: '**/TEST-*.xml'
+      codeCoverageToolOption: 'JaCoCo'
+      codeCoverageClassFilesDirectories: 'build/classes/main/'
+      codeCoverageGradle5xOrHigher: false
+      javaHomeOption: 'JDKVersion'
+      sonarQubeRunAnalysis: true
+      sqGradlePluginVersionChoice: 'specify'
+      sonarQubeGradlePluginVersion: '3.3'
+      spotBugsAnalysis: false
+    displayName: 'SonarCloud Analysis'
 
 ###Docker build
-
   - task: Docker@2
     inputs:
       containerRegistry: 'DockerHub'
@@ -86,9 +83,6 @@ jobs:
   dependsOn: Build
   pool: 'localk8s'
   steps:
- # - script: |
- #     kubectl delete deployment microservicio-spring-deployment
- #     kubectl delete service microservicio-spring-deployment    
   - task: Kubernetes@1
     inputs:
       connectionType: 'None'
@@ -104,12 +98,7 @@ jobs:
   - script: |
       kubectl port-forward deploy/microservicio-spring-deployment 8080:8080 &
     
-#  - script: |
-#      kubectl expose deployment microservicio-spring-deployment --type=LoadBalancer --port=8080
-#      sleep 60
-#      kubectl delete service microservicio-spring-deployment
-#      kubectl port-forward deploy/microservicio-spring-deployment 8080:8080 &
-
+###Performance test    
   - task: JMeterInstaller@0
     inputs:
       jmeterVersion: '5.4.2'
@@ -124,28 +113,3 @@ jobs:
     inputs:
       artifactPath: '$(System.DefaultWorkingDirectory)/resultadosJmeter.jtl'
     displayName: 'Upload JMeter result'
-###Performance test    
-#- job: 'PerformanceTest'
-#  dependsOn: DeployForward
-#  pool: 'localk8s'
-#  steps:
-#   - script: |
-#      jmeter -n -t $(System.DefaultWorkingDirectory)/microservicio-spring.jmx -l $(System.DefaultWorkingDirectory)/resultadosJmeter.jtl
-#  displayName: 'Permormance test JMeter'  
-
-
-#  - task: TaurusRunner@0
-#    inputs:
-#      taurusConfig: |
-#        execution:
-#        - scenario:
-#            requests:
-#              script: microservicio-spring.jmx
-#      jmeterHome: 'C:\Users\xx\Downloads\apache-jmeter-5.5\apache-jmeter-5.5'
-#      jmeterPath: 'C:\Users\xxx\Downloads\apache-jmeter-5.5\apache-jmeter-5.5\bin'
-#      jmeterVersion: '5.5'
-#      outputDir: 'taurus-output'
-  
-#  - script: jmeter -n -t $(System.DefaultWorkingDirectory)/jmeter/test-plan.jmx -l $(System.DefaultWorkingDirectory)/resultados.jtl
-
-#  - script: 'jmeter -n -t \jmeter\test\PerformanceTesting.jmx -l \jmeter\result\results.jtl'
