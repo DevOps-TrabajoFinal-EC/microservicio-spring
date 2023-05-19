@@ -51,6 +51,9 @@ jobs:
       repository: 'nsg2020/microservicio-spring'
       command: 'build'
       Dockerfile: '**/Dockerfile'
+      tags: |
+        latest
+        $(Build.BuildId)
     displayName: 'Docker Build'
 
   - task: Docker@2
@@ -58,6 +61,9 @@ jobs:
       containerRegistry: 'DockerHub'
       repository: 'nsg2020/microservicio-spring'
       command: 'push'
+      tags: |
+        latest
+        $(Build.BuildId)
     displayName: 'Docker Push'
 
 - job: 
@@ -69,3 +75,4 @@ jobs:
       command: 'apply'
       arguments: '-f deployment-app.yaml'
     displayName: 'Deployment k8s local'
+  - script: kubectl port-forward deploy/microservicio-spring-deployment 8080:8080
