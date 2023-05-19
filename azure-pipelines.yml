@@ -1,5 +1,5 @@
 jobs:
-- job:
+- job: Build
   pool:
     vmImage: ubuntu-latest
   displayName: Build
@@ -76,15 +76,21 @@ jobs:
         $(Build.BuildId)
     displayName: 'Docker Push'
 
-- job: 
+- job: Deploy
+  dependsOn: Build
   pool: 'localk8s'
   steps:
+  - script: |
+      kubectl delete deployment microservicio-spring-deployment
+      kubectl delete service microservicio-spring-deployment    
   - task: Kubernetes@1
     inputs:
       connectionType: 'None'
       command: 'apply'
       arguments: '-f deployment-app.yaml'
     displayName: 'Deployment k8s local'
-  - script: |
-      sleep 60
-      kubectl port-forward deploy/microservicio-spring-deployment 8080:8080 &
+#  - script: |
+#      sleep 60
+#      kubectl delete deployment microservicio-spring-deployment
+#      kubectl delete service microservicio-spring-deployment
+#      kubectl port-forward deploy/microservicio-spring-deployment 8080:8080 &
