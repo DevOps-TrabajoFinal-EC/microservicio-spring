@@ -27,6 +27,7 @@ jobs:
       failIfCoverageEmpty: true
     displayName: 'JaCoCo test'
 
+###SonarCloud Analysis
   - task: SonarCloudPrepare@1
     inputs:
       SonarCloud: 'SonarCloudEC'
@@ -39,11 +40,7 @@ jobs:
     inputs:
       gradleWrapperFile: 'gradlew'
       tasks: 'sonar'
-      publishJUnitResults: true
-      testResultsFiles: '**/TEST-*.xml'
-      codeCoverageToolOption: 'JaCoCo'
-      codeCoverageClassFilesDirectories: 'build/classes/main/'
-      codeCoverageGradle5xOrHigher: false
+      publishJUnitResults: false
       javaHomeOption: 'JDKVersion'
       sonarQubeRunAnalysis: true
       sqGradlePluginVersionChoice: 'specify'
