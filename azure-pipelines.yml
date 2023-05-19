@@ -76,21 +76,31 @@ jobs:
         $(Build.BuildId)
     displayName: 'Docker Push'
 
+#Deployment job
 - job: Deploy
   dependsOn: Build
   pool: 'localk8s'
   steps:
-  - script: |
-      kubectl delete deployment microservicio-spring-deployment
-      kubectl delete service microservicio-spring-deployment    
+ # - script: |
+ #     kubectl delete deployment microservicio-spring-deployment
+ #     kubectl delete service microservicio-spring-deployment    
   - task: Kubernetes@1
     inputs:
       connectionType: 'None'
       command: 'apply'
       arguments: '-f deployment-app.yaml'
     displayName: 'Deployment k8s local'
+
+#Port forward for k8s local    
+- job: 'DeployForward'
+  dependsOn: Deploy
+  pool: 'localk8s'
+  steps:
   - script: |
-      kubectl expose deployment microservicio-spring-deployment --type=LoadBalancer --port=8080
+      kubectl port-forward deploy/microservicio-spring-deployment 8080:8080 &
+    
+#  - script: |
+#      kubectl expose deployment microservicio-spring-deployment --type=LoadBalancer --port=8080
 #      sleep 60
 #      kubectl delete service microservicio-spring-deployment
 #      kubectl port-forward deploy/microservicio-spring-deployment 8080:8080 &
