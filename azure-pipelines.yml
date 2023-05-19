@@ -94,3 +94,20 @@ jobs:
 #      kubectl delete deployment microservicio-spring-deployment
 #      kubectl delete service microservicio-spring-deployment
 #      kubectl port-forward deploy/microservicio-spring-deployment 8080:8080 &
+
+#  - task: TaurusRunner@0
+#    inputs:
+#      taurusConfig: |
+#        execution:
+#        - scenario:
+#            requests:
+#              script: microservicio-spring.jmx
+#      jmeterHome: 'C:\Users\xx\Downloads\apache-jmeter-5.5\apache-jmeter-5.5'
+#      jmeterPath: 'C:\Users\xxx\Downloads\apache-jmeter-5.5\apache-jmeter-5.5\bin'
+#      jmeterVersion: '5.5'
+#      outputDir: 'taurus-output'
+  
+#  - script: jmeter -n -t $(System.DefaultWorkingDirectory)/jmeter/test-plan.jmx -l $(System.DefaultWorkingDirectory)/resultados.jtl
+
+#  - script: 'jmeter -n -t \jmeter\test\PerformanceTesting.jmx -l \jmeter\result\results.jtl'
+
