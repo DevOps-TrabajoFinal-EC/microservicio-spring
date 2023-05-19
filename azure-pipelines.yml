@@ -113,13 +113,17 @@ jobs:
   - task: JMeterInstaller@0
     inputs:
       jmeterVersion: '5.4.2'
+    displayName: 'JMeter Installation'
   - task: Bash@3
     inputs:
       targetType: 'inline'
       script: 'jmeter -n -t $(System.DefaultWorkingDirectory)/microservicio-spring.jmx -l $(System.DefaultWorkingDirectory)/resultadosJmeter.jtl'
       workingDirectory: '$(System.DefaultWorkingDirectory)'
-  - publish: $(System.DefaultWorkingDirectory)
-    artifact: WebApp
+    displayName: 'JMeter run'
+  - task: PublishReleaseArtifact@1
+    inputs:
+      artifactPath: '$(System.DefaultWorkingDirectory)'
+    displayName: 'Upload JMeter result'
 ###Performance test    
 #- job: 'PerformanceTest'
 #  dependsOn: DeployForward
