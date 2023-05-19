@@ -59,3 +59,13 @@ jobs:
       repository: 'nsg2020/microservicio-spring'
       command: 'push'
     displayName: 'Docker Push'
+
+- job: 
+  pool: 'localk8s'
+  steps:
+  - task: Kubernetes@1
+    inputs:
+      connectionType: 'None'
+      command: 'apply'
+      arguments: '-f deployment-app.yaml'
+    displayName: 'Deployment k8s local'

@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: microservicio-spring
-        image: clagosu/microservicio-spring:101
+        image: nsg2020/microservicio-spring:41
         ports:
         - containerPort: 8080
