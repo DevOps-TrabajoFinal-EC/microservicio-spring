@@ -110,15 +110,24 @@ jobs:
 #      kubectl delete service microservicio-spring-deployment
 #      kubectl port-forward deploy/microservicio-spring-deployment 8080:8080 &
 
+  - task: JMeterInstaller@0
+    inputs:
+      jmeterVersion: '5.4.2'
+  - task: Bash@3
+    inputs:
+      targetType: 'inline'
+      script: 'jmeter -n -t $(System.DefaultWorkingDirectory)/microservicio-spring.jmx -l $(System.DefaultWorkingDirectory)/resultadosJmeter.jtl'
+      workingDirectory: '$(System.DefaultWorkingDirectory)'
 
 ###Performance test    
-- job: 'PerformanceTest'
-  dependsOn: DeployForward
-  pool: 'localk8s'
-  steps:
-   - script: |
-      jmeter -n -t $(System.DefaultWorkingDirectory)/microservicio-spring.jmx -l $(System.DefaultWorkingDirectory)/resultadosJmeter.jtl
-  displayName: 'Permormance test JMeter'  
+#- job: 'PerformanceTest'
+#  dependsOn: DeployForward
+#  pool: 'localk8s'
+#  steps:
+#   - script: |
+#      jmeter -n -t $(System.DefaultWorkingDirectory)/microservicio-spring.jmx -l $(System.DefaultWorkingDirectory)/resultadosJmeter.jtl
+#  displayName: 'Permormance test JMeter'  
+
 
 #  - task: TaurusRunner@0
 #    inputs:
