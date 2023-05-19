@@ -136,4 +136,3 @@ jobs:
 #  - script: jmeter -n -t $(System.DefaultWorkingDirectory)/jmeter/test-plan.jmx -l $(System.DefaultWorkingDirectory)/resultados.jtl
 
 #  - script: 'jmeter -n -t \jmeter\test\PerformanceTesting.jmx -l \jmeter\result\results.jtl'
-
