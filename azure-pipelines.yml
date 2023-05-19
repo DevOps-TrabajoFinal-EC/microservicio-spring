@@ -117,6 +117,7 @@ jobs:
   pool: 'localk8s'
   steps:
    - script: |
+      cd /home/securitylab/jmeter/apache-jmeter-5.5/bin/
       jmeter -n -t $(System.DefaultWorkingDirectory)/microservicio-spring.jmx -l $(System.DefaultWorkingDirectory)/resultadosJmeter.jtl
   displayName: 'Permormance test JMeter'  
 
