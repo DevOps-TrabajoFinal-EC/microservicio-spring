@@ -122,7 +122,7 @@ jobs:
     displayName: 'JMeter run'
   - task: PublishReleaseArtifact@1
     inputs:
-      artifactPath: '$(System.DefaultWorkingDirectory)'
+      artifactPath: '$(System.DefaultWorkingDirectory)/resultadosJmeter.jtl'
     displayName: 'Upload JMeter result'
 ###Performance test    
 #- job: 'PerformanceTest'
