@@ -87,4 +87,4 @@ jobs:
     displayName: 'Deployment k8s local'
   - script: |
       sleep 60
-      kubectl port-forward deploy/microservicio-spring-deployment 8080:8080
+      kubectl port-forward deploy/microservicio-spring-deployment 8080:8080 &
