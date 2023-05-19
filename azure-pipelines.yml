@@ -118,7 +118,8 @@ jobs:
       targetType: 'inline'
       script: 'jmeter -n -t $(System.DefaultWorkingDirectory)/microservicio-spring.jmx -l $(System.DefaultWorkingDirectory)/resultadosJmeter.jtl'
       workingDirectory: '$(System.DefaultWorkingDirectory)'
-
+  - publish: $(System.DefaultWorkingDirectory)
+    artifact: WebApp
 ###Performance test    
 #- job: 'PerformanceTest'
 #  dependsOn: DeployForward
