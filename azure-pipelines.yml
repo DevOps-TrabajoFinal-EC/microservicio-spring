@@ -90,7 +90,7 @@ jobs:
       arguments: '-f deployment-app.yaml'
     displayName: 'Deployment k8s local'
   - script: |
-      kubectl expose deployment microservicio-spring-deployment --type=LoadBalancer --port:8080
+      kubectl expose deployment microservicio-spring-deployment --type=LoadBalancer --port=8080
 #      sleep 60
 #      kubectl delete service microservicio-spring-deployment
 #      kubectl port-forward deploy/microservicio-spring-deployment 8080:8080 &
