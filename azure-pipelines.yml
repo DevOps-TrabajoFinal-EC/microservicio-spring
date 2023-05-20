@@ -109,4 +109,4 @@ jobs:
   - task: PublishReleaseArtifact@1
     inputs:
       artifactPath: '$(System.DefaultWorkingDirectory)/resultadosJmeter.jtl'
-    displayName: 'Upload JMeter result'
+    displayName: 'Upload JMeter result to pipeline logs'
