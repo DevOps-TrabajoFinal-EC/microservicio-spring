@@ -51,7 +51,7 @@ jobs:
 ###Pipeline break
   - task: sonarcloud-buildbreaker@2
     inputs:
-      SonarCloud: 'SonarCloud'
+      SonarCloud: 'SonarCloudEC'
       organization: 'devops-trabajofinal-ec'
     displayName: 'Validate Quality Gate'  
       
