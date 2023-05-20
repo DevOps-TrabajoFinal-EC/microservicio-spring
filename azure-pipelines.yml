@@ -48,6 +48,13 @@ jobs:
       spotBugsAnalysis: false
     displayName: 'SonarCloud Analysis'
 
+###Pipeline break
+  - task: sonarcloud-buildbreaker@2
+    inputs:
+      SonarCloud: 'SonarCloud'
+      organization: 'devops-trabajofinal-ec'
+    displayName: 'Validate Quality Gate'  
+      
 ###Docker build
   - task: Docker@2
     inputs:
