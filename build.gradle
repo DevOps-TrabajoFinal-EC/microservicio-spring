@@ -18,6 +18,16 @@ dependencies {
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
 }
 
+jacocoTestCoverageVerification {
+  violationRules {
+    rule {
+      limit {
+        minimum = 0.8
+      }
+    }
+  }
+}
+
 jacocoTestReport {
   dependsOn test
 	reports {
