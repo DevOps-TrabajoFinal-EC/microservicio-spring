@@ -17,16 +17,7 @@ jobs:
       spotBugsAnalysis: false
     displayName: Build
 
-###JaCoCo
-  - task: PublishCodeCoverageResults@1
-    inputs:
-      codeCoverageTool: 'JaCoCo'
-      summaryFileLocation: '$(System.DefaultWorkingDirectory)/build/reports/jacoco/test/jacocoTestReport.xml'
-      pathToSources: '$(System.DefaultWorkingDirectory)/src/main/java/'
-      reportDirectory: '$(System.DefaultWorkingDirectory)/build/reports/jacoco/test'
-      failIfCoverageEmpty: true
-    displayName: 'JaCoCo unit testing result'
-
+###Validate Code Coverage
   - script: |
       sudo apt-get update
       sudo apt-get install -y libxml2-utils
@@ -41,6 +32,16 @@ jobs:
         exit 1
       fi
     displayName: 'Validate Code Coverage'
+
+###Publish JaCoCo Report
+  - task: PublishCodeCoverageResults@1
+    inputs:
+      codeCoverageTool: 'JaCoCo'
+      summaryFileLocation: '$(System.DefaultWorkingDirectory)/build/reports/jacoco/test/jacocoTestReport.xml'
+      pathToSources: '$(System.DefaultWorkingDirectory)/src/main/java/'
+      reportDirectory: '$(System.DefaultWorkingDirectory)/build/reports/jacoco/test'
+      failIfCoverageEmpty: true
+    displayName: 'Publish JaCoCo unit testing report'
 
 ###SonarCloud Analysis
   - task: SonarCloudPrepare@1
@@ -119,6 +120,7 @@ jobs:
   pool: 'localk8s'
   steps:
   - script: |
+      sleep 5
       kubectl port-forward deploy/microservicio-spring-deployment 8080:8080 &
   displayName: 'Add port forward to localhost:8080'
     
