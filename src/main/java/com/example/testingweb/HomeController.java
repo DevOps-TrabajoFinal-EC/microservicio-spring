@@ -9,7 +9,6 @@ public class HomeController {
 
 	@RequestMapping("/")
 	public @ResponseBody String greeting() {
-		String password = "1234567892";
 		return "Finaliza el curso DevOps Foundation v4 - Eduardo Chasco";
 	}
 

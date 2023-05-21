@@ -1,10 +1,10 @@
+###Build Gradle
 jobs:
-- job: Build
+- job: BuildAndUnitTesting
   pool:
     vmImage: ubuntu-latest
-  displayName: Build
+  displayName: BuildAndUnitTesting
 
-###Build Gradle
   steps: 
   - task: Gradle@3
     inputs:
@@ -16,7 +16,6 @@ jobs:
       sonarQubeRunAnalysis: false
       spotBugsAnalysis: false
     displayName: Build
-
 ###JaCoCo
   - task: PublishCodeCoverageResults@1
     inputs:
@@ -25,9 +24,16 @@ jobs:
       pathToSources: '$(System.DefaultWorkingDirectory)/src/main/java/'
       reportDirectory: '$(System.DefaultWorkingDirectory)/build/reports/jacoco/test'
       failIfCoverageEmpty: true
-    displayName: 'JaCoCo test'
+    displayName: 'JaCoCo test result'
 
 ###SonarCloud Analysis
+- job: CodeReview
+  dependsOn: BuildAndUnitTesting
+  pool:
+    vmImage: ubuntu-latest
+  displayName: CodeReview
+
+  steps: 
   - task: SonarCloudPrepare@1
     inputs:
       SonarCloud: 'SonarCloudEC'
@@ -53,14 +59,22 @@ jobs:
     inputs:
       SonarCloud: 'SonarCloudEC'
       organization: 'devops-trabajofinal-ec'
-    displayName: 'Validate Quality Gate'  
-      
-###Docker build
+    displayName: 'Breaking pipeline by Quality Gate validation'  
+
+###Docker Registry
+- job: DockerRegistry
+  dependsOn: CodeReview
+  pool:
+    vmImage: ubuntu-latest
+  displayName: Upload Docker Registry
+
+  steps: 
   - task: Docker@2
     inputs:
       containerRegistry: 'DockerHub'
       command: 'login'
     displayName: 'Docker Login'
+
   - task: Docker@2
     inputs:
       containerRegistry: 'DockerHub'
@@ -84,8 +98,9 @@ jobs:
 
 ###Deployment job
 - job: Deploy
-  dependsOn: Build
+  dependsOn: DockerRegistry
   pool: 'localk8s'
+
   steps:
   - task: Kubernetes@1
     inputs:
@@ -102,17 +117,24 @@ jobs:
   - script: |
       kubectl port-forward deploy/microservicio-spring-deployment 8080:8080 &
     
-###Performance test    
+###Performance test  
+- job: PerformanceTesting
+  dependsOn: DeployForward
+  pool: 'localk8s'
+
+  steps:  
   - task: JMeterInstaller@0
     inputs:
       jmeterVersion: '5.4.2'
     displayName: 'JMeter Installation'
+
   - task: Bash@3
     inputs:
       targetType: 'inline'
       script: 'jmeter -n -t $(System.DefaultWorkingDirectory)/microservicio-spring.jmx -l $(System.DefaultWorkingDirectory)/resultadosJmeter.jtl'
       workingDirectory: '$(System.DefaultWorkingDirectory)'
     displayName: 'JMeter run'
+
   - task: PublishReleaseArtifact@1
     inputs:
       artifactPath: '$(System.DefaultWorkingDirectory)/resultadosJmeter.jtl'
