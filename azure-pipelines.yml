@@ -36,7 +36,7 @@ jobs:
       total=$(xmllint --xpath "sum(//counter[@type='INSTRUCTION']/@missed)" $reportFile)
       percentage=$(echo "scale=2; ($coverage / ($coverage + $total)) * 100" | bc)
       echo "Code coverage: $percentage%"
-      if (( $(echo "$percentage < $threshold" | bc -l) )); then
+      if (( $(echo "$percentage < $threshold") )); then
         echo "Code coverage is below the threshold of $threshold%"
         exit 1
       fi
