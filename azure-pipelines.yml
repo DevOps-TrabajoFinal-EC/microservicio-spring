@@ -89,6 +89,8 @@ jobs:
   pool: 'localk8s'
 
   steps:
+  - script: |
+      kubectl delete deploy/microservicio-spring-deployment &
   - task: Kubernetes@1
     inputs:
       connectionType: 'None'
