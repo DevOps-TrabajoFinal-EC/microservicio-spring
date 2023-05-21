@@ -119,11 +119,10 @@ jobs:
   pool: 'localk8s'
   steps:
 
-###k8s port forward to localhost:8080    
+###k8s port forward to localhost:8080 
   - script: |
-      sleep 5
-      kubectl port-forward deploy/microservicio-spring-deployment 8080:8080 &
-  displayName: 'Add port forward to localhost:8080'
+     kubectl port-forward deploy/microservicio-spring-deployment 8080:8080 &   
+    displayName: 'Add port forward to localhost:8080'
    
 ###Performance testing  
   - task: JMeterInstaller@0
