@@ -27,6 +27,21 @@ jobs:
       failIfCoverageEmpty: true
     displayName: 'JaCoCo unit testing result'
 
+  - script: |
+      sudo apt-get update
+      sudo apt-get install -y libxml2-utils
+      threshold=70  # Set the desired code coverage threshold
+      reportFile=$(System.DefaultWorkingDirectory)/build/reports/jacoco/test/jacocoTestReport.xml
+      coverage=$(xmllint --xpath "sum(//counter[@type='INSTRUCTION']/@covered)" $reportFile)
+      total=$(xmllint --xpath "sum(//counter[@type='INSTRUCTION']/@missed)" $reportFile)
+      percentage=$(echo "scale=2; ($coverage / ($coverage + $total)) * 100" | bc)
+      echo "Code coverage: $percentage%"
+      if (( $(echo "$percentage < $threshold" | bc -l) )); then
+        echo "Code coverage is below the threshold of $threshold%"
+        exit 1
+      fi
+    displayName: 'Validate Code Coverage'
+
 ###SonarCloud Analysis
   - task: SonarCloudPrepare@1
     inputs:
