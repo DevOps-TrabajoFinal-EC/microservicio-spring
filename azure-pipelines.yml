@@ -114,22 +114,18 @@ jobs:
       arguments: '-f deployment-app.yaml'
     displayName: 'Deployment to k8s on-premises'
 
-###k8s port forward to localhost:8080    
-- job: DeployForward
+- job: PerformanceTesting
   dependsOn: Deploy
   pool: 'localk8s'
   steps:
+
+###k8s port forward to localhost:8080    
   - script: |
       sleep 5
       kubectl port-forward deploy/microservicio-spring-deployment 8080:8080 &
   displayName: 'Add port forward to localhost:8080'
-    
+   
 ###Performance testing  
-- job: PerformanceTesting
-  dependsOn: DeployForward
-  pool: 'localk8s'
-
-  steps:  
   - task: JMeterInstaller@0
     inputs:
       jmeterVersion: '5.4.2'
