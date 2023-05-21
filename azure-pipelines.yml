@@ -1,9 +1,9 @@
 ###Build Gradle
 jobs:
-- job: BuildAndUnitTesting
+- job: BuildAndTesting
   pool:
     vmImage: ubuntu-latest
-  displayName: BuildAndUnitTesting
+  displayName: BuildAndTesting
 
   steps: 
   - task: Gradle@3
@@ -28,13 +28,6 @@ jobs:
     displayName: 'JaCoCo unit testing result'
 
 ###SonarCloud Analysis
-- job: CodeReview
-  dependsOn: BuildAndUnitTesting
-  pool:
-    vmImage: ubuntu-latest
-  displayName: CodeReview
-
-  steps: 
   - task: SonarCloudPrepare@1
     inputs:
       SonarCloud: 'SonarCloudEC'
@@ -60,7 +53,7 @@ jobs:
     inputs:
       SonarCloud: 'SonarCloudEC'
       organization: 'devops-trabajofinal-ec'
-    displayName: 'Quality Gate validation'  
+    displayName: 'SonarCloud Quality Gate validation'  
 
 ###Docker Registry
   - task: Docker@2
@@ -92,7 +85,7 @@ jobs:
 
 ###Deployment job
 - job: Deploy
-  dependsOn: CodeReview
+  dependsOn: BuildAndTesting
   pool: 'localk8s'
 
   steps:
@@ -101,15 +94,16 @@ jobs:
       connectionType: 'None'
       command: 'apply'
       arguments: '-f deployment-app.yaml'
-    displayName: 'Deployment k8s local'
+    displayName: 'Deployment to k8s on-premises'
 
 ###k8s port forward to localhost:8080    
-- job: 'DeployForward'
+- job: DeployForward
   dependsOn: Deploy
   pool: 'localk8s'
   steps:
   - script: |
       kubectl port-forward deploy/microservicio-spring-deployment 8080:8080 &
+  displayName: 'Add port forward to localhost:8080'
     
 ###Performance testing  
 - job: PerformanceTesting
